@@ -36,27 +36,46 @@ header('Content-Type: application/json');
 $responseData = null;
 $responseCode = null;
 
+
+
 // User CRUD operations
-if ($endpoint === 'users') {
+if ($endpoint === '/programmers_force/ecommerce_store/index.php/users') {
     $userController = new UserController();
 
     if ($method === 'GET') {
-        $id = $_GET['id'] ?? null;
+        echo 'djvnfdkvkdfnvkd';
+        $id = $_POST['userid'] ?? null;
+        echo "id".$id;
         if ($id) {
             $responseData = $userController->getUserByID($id);
         } else {
             $responseData = $userController->getAllUsers();
         }
     } elseif ($method === 'POST') {
-        $requestData = json_decode(file_get_contents('php://input'), true);
+        $requestBody = file_get_contents('php://input');
+        $requestData = json_decode($requestBody, true);
+        $username = $requestData['username'];
+        $email = $requestData['email'];
+        $password = $requestData['password'];
+        $firstname = $requestData['firstname'];
+        $lastname = $requestData['lastname'];
+        $address = $requestData['address'];
+        $phonenumber = $requestData['phonenumber'];
+        // echo "Username: " . $username . "<br>";
+        // echo "Email: " . $email . "<br>";
+        // echo "Password: " . $password . "<br>";
+        // echo "First Name: " . $firstname . "<br>";
+        // echo "Last Name: " . $lastname . "<br>";
+        // echo "Address: " . $address . "<br>";
+        // echo "Phone Number: " . $phonenumber . "<br>";
         $responseData = $userController->createUser(
-            $requestData['username'],
-            $requestData['email'],
-            $requestData['password'],
-            $requestData['firstName'],
-            $requestData['lastName'],
-            $requestData['address'],
-            $requestData['phoneNumber']
+            $username,
+            $email,
+            $password,
+            $firstname,
+            $lastname,
+            $address,
+            $phonenumber
         );
         $responseCode = 201; // Created
     } elseif ($method === 'PUT') {
@@ -78,7 +97,9 @@ if ($endpoint === 'users') {
             $responseData = array('message' => 'Missing ID parameter');
         }
     } elseif ($method === 'DELETE') {
-        $id = $_GET['id'] ?? null;
+        echo "Inside User Delete";
+        $id = $_GET['userid'] ?? null;
+        echo "id= " . $id;
         if ($id) {
             $responseData = $userController->deleteUser($id);
         } else {
@@ -299,7 +320,6 @@ elseif ($endpoint === 'order-items') {
         }
     }
 }
-
 
 // OrderItem CRUD operations
 elseif ($endpoint === 'payments') {
